@@ -1,8 +1,8 @@
 # NotebookLM Skill Dependencies
 # These will be installed in the skill's local .venv
 
-# NotebookLM API client (includes playwright for login)
-notebooklm-py[browser]>=0.3.3
+# NotebookLM API client (vendored, includes playwright for login)
+-e ./vendor/notebooklm-py[browser]
 
 # SOCKS proxy support for httpx
 httpx[socks]
