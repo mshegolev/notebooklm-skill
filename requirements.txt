@@ -1,10 +1,11 @@
 # NotebookLM Skill Dependencies
 # These will be installed in the skill's local .venv
 
-# Core browser automation with anti-detection
-# Note: After installation, run: patchright install chrome
-# (Chrome is required, not Chromium, for cross-platform reliability)
-patchright==1.55.2
+# NotebookLM API client (includes playwright for login)
+notebooklm-py[browser]>=0.3.3
+
+# SOCKS proxy support for httpx
+httpx[socks]
 
 # Environment management
 python-dotenv==1.0.0

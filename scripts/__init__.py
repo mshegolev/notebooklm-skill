@@ -55,15 +55,15 @@ def ensure_venv_and_run():
                 check=True
             )
 
-            # Also install patchright's chromium
-            print("   Setting up browser automation...")
+            # Install Chromium for Playwright (used by notebooklm-py for login)
+            print("   Setting up browser for authentication...")
             if os.name == 'nt':
                 python_exe = venv_dir / "Scripts" / "python.exe"
             else:
                 python_exe = venv_dir / "bin" / "python"
 
             subprocess.run(
-                [str(python_exe), "-m", "patchright", "install", "chromium"],
+                [str(python_exe), "-m", "playwright", "install", "chromium"],
                 check=True,
                 capture_output=True
             )

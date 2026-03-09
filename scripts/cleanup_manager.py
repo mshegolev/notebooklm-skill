@@ -40,39 +40,13 @@ class CleanupManager:
         Note: .venv is NEVER deleted - it's part of the skill infrastructure
         """
         paths = {
-            'browser_state': [],
-            'sessions': [],
             'library': [],
-            'auth': [],
             'other': []
         }
 
         total_size = 0
 
         if self.data_dir.exists():
-            # Browser state
-            browser_state_dir = self.data_dir / "browser_state"
-            if browser_state_dir.exists():
-                for item in browser_state_dir.iterdir():
-                    size = self._get_size(item)
-                    paths['browser_state'].append({
-                        'path': str(item),
-                        'size': size,
-                        'type': 'dir' if item.is_dir() else 'file'
-                    })
-                    total_size += size
-
-            # Sessions
-            sessions_file = self.data_dir / "sessions.json"
-            if sessions_file.exists():
-                size = sessions_file.stat().st_size
-                paths['sessions'].append({
-                    'path': str(sessions_file),
-                    'size': size,
-                    'type': 'file'
-                })
-                total_size += size
-
             # Library (unless preserved)
             if not preserve_library:
                 library_file = self.data_dir / "library.json"
@@ -85,20 +59,9 @@ class CleanupManager:
                     })
                     total_size += size
 
-            # Auth info
-            auth_info = self.data_dir / "auth_info.json"
-            if auth_info.exists():
-                size = auth_info.stat().st_size
-                paths['auth'].append({
-                    'path': str(auth_info),
-                    'size': size,
-                    'type': 'file'
-                })
-                total_size += size
-
             # Other files in data dir (but NEVER .venv!)
             for item in self.data_dir.iterdir():
-                if item.name not in ['browser_state', 'sessions.json', 'library.json', 'auth_info.json']:
+                if item.name not in ['library.json']:
                     size = self._get_size(item)
                     paths['other'].append({
                         'path': str(item),
@@ -182,11 +145,6 @@ class CleanupManager:
                         'error': str(e)
                     })
                     print(f"  ❌ Failed: {path.name} ({e})")
-
-        # Recreate browser_state dir if everything was deleted
-        if not preserve_library and not failed_items:
-            browser_state_dir = self.data_dir / "browser_state"
-            browser_state_dir.mkdir(parents=True, exist_ok=True)
 
         return {
             'deleted_items': deleted_items,
